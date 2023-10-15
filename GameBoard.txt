@@ -1,0 +1,169 @@
+public class GameBoard
+{
+    /*
+    Empty Space - "⚪"
+    Red Disc - "🔴"
+    Yellow Disc - "🟡"
+    */
+    private String[][] myBoard;
+    private int turn;
+    
+    // Initializes the board
+    public GameBoard() {
+        myBoard = new String[6][7];
+        for (int i = 0; i < myBoard.length; i++) {
+            for (int j = 0; j < myBoard[i].length; j++) {
+                myBoard[i][j] = "⚪";
+                
+            }
+        }
+    }
+    
+    public int getTurn() {
+        return turn;
+    }
+    
+    public void setTurn(int newTurn) {
+        turn = newTurn;
+    }
+    
+    public String[][] getMyBoard() {
+        return myBoard;
+    }
+    
+    public void setMyBoard(int i, int j, String value) {
+        myBoard[i][j] = value;
+    }
+    
+    public boolean fullCol(GameBoard myGameBoard, int col) {
+        return !myGameBoard.getMyBoard()[0][col].equals("⚪");
+    }
+    /*
+    // Drops a disc of the appropriate color into the requested column
+    // Precondition: col is in-bounds and not already full
+    // Postcondition: The row into which the disc was dropped will be returned
+    */
+    public int drop(int col) {
+        int index = 0;
+        String[][] myBoard = getMyBoard();
+        for (int i = 0; i < myBoard.length; i++) {
+            if(myBoard[i][col].equals("⚪")){
+                index = i;
+            }
+        }
+
+        if (turn % 2 == 0) {
+            myBoard[index][col] = "🔴";
+        } else {
+            myBoard[index][col] = "🟡";
+        }
+        
+        turn++;
+        return index;
+        
+    }
+    
+    /*
+    // Checks if the tile at the provided row and column won the game
+    // Precondition: row, col are valid indices within the board
+    // Postcondition: The method will return true if a player has won the game 
+    //  and false otherwise.
+    */
+    public boolean checkWin(int row, int col) {
+        return checkWin();
+    }
+    
+    public boolean checkWin() {
+        return (checkWinHorizontal() || checkWinVertical() || checkWinDiag());
+    }
+    
+    public boolean checkWinHorizontal() {
+        String horizontalString = new String();
+        for (int i = 0; i < myBoard.length; i++) {
+            for (int j = 0; j < myBoard[i].length; j++) {
+                horizontalString += myBoard[i][j];
+            }
+            horizontalString += "\n";
+        }
+        return (horizontalString.contains("🔴🔴🔴🔴") || horizontalString.contains("🟡🟡🟡🟡"));
+    }
+    
+    public boolean checkWinVertical() {
+        String verticalString = new String();
+        for (int i = 0; i < myBoard[0].length; i++) {
+            for (int j = 0; j < myBoard.length; j++) {
+                verticalString += myBoard[j][i];
+            }
+            verticalString += "\n";
+        }
+        return (verticalString.contains("🔴🔴🔴🔴") || verticalString.contains("🟡🟡🟡🟡"));
+    }
+    
+    public boolean checkWinDiag() {
+        String firstDiagString = new String();
+        String secondDiagString = new String();
+        for (int i = 0; i < myBoard.length; i++) {
+            int firstIndex = i;
+            int secondIndex = 0;
+            while((firstIndex < myBoard.length) && (secondIndex < myBoard[i].length)) {
+                firstDiagString += myBoard[firstIndex][secondIndex];
+                secondDiagString += myBoard[myBoard.length-firstIndex-1][secondIndex];
+                firstIndex++;
+                secondIndex++;
+            }
+            firstDiagString += "\n";
+            secondDiagString += "\n";
+        }
+        for (int j = 0; j < myBoard[0].length; j++) {
+            int firstIndex = 0;
+            int secondIndex = j;
+            while((firstIndex < myBoard.length) && (secondIndex < myBoard[0].length)) {
+                firstDiagString += myBoard[firstIndex][secondIndex];
+                secondDiagString += myBoard[myBoard.length-firstIndex-1][secondIndex];
+                firstIndex++;
+                secondIndex++;
+            }
+            firstDiagString += "\n";
+            secondDiagString += "\n";
+        }
+        return (firstDiagString.contains("🔴🔴🔴🔴") || firstDiagString.contains("🟡🟡🟡🟡")
+        || secondDiagString.contains("🔴🔴🔴🔴") || secondDiagString.contains("🟡🟡🟡🟡"));
+    }
+    
+    
+    /*
+    // Checks whether every available slot on the board has been filled
+    // Postcondition: The method will return true if every slot has a disc in it
+    //  and false otherwise.
+    */
+    public boolean fullBoard() {
+        for (int i = 0; i < myBoard.length; i++) {
+            for (int j = 0; j < myBoard[i].length; j++) {
+                if (myBoard[i][j].equals("⚪")) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    /*
+    // Displays the contents of the board to the user. 
+    // Clears the screen before doing so.
+    */
+    public void printBoard() {
+        System.out.print("\u001b[2J\u001b[100A"); // This will clear the screen - don't change it!
+        System.out.print(" ");
+        for (int i = 0; i < myBoard[0].length; i++) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        for (int i = 0; i < myBoard.length; i++) {
+            for (int j = 0; j < myBoard[i].length; j++) {
+                System.out.print(myBoard[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    
+}
